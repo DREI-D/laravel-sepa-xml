@@ -26,7 +26,7 @@ class SepaFileCreationService
 
     public function create(string $transactionNumber, array $transactions): string
     {
-        $sum = array_reduce($transactions, static function (int $carry, TransactionDto $dto) {
+        $sum = array_reduce($transactions, static function (float $carry, TransactionDto $dto) {
             return $carry + $dto->amount;
         }, 0);
 
