@@ -30,4 +30,13 @@ class SepaStringSanitizeService
             $subject
         );
     }
+
+    public function sanitizeBankDetails(string $value): string
+    {
+        return preg_replace(
+            '/[^A-Z0-9]/',
+            '',
+            Str::upper($value)
+        );
+    }
 }

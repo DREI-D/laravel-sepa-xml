@@ -9,6 +9,6 @@ readonly class TransactionDto
         public string $subject,
         public string $iban,
         public string $bic,
-        public float $amount
+        public float $amount,
     ) {}
 }
