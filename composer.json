@@ -1,16 +1,16 @@
 {
-    "name": "drei-d/laravel-sepa-xml",
-    "description": "Creates SEPA XML files",
+    "name": "bluecraank/laravel-sepa-xml",
+    "description": "Creates SEPA XML files in pain001.001.03 format",
     "type": "library",
     "version": "1.1.0",
     "autoload": {
         "psr-4": {
-            "DREID\\LaravelSepaXml\\": "src/"
+            "bluecraank\\LaravelSepaXml\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Oliver Vollborn"
+            "name": "Nils Fischer"
         }
     ],
     "require": {
@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "DREID\\LaravelSepaXml\\Providers\\ServiceProvider"
+                "bluecraank\\LaravelSepaXml\\Providers\\ServiceProvider"
             ]
         }
     }
