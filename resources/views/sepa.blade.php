@@ -13,6 +13,7 @@
         <PmtInf>
             <PmtInfId>{{ $messageId }}</PmtInfId>
             <PmtMtd>TRF</PmtMtd>
+            <BtchBookg>{{ config('sepa.group_transactions_as_one_transfer') }}</BtchBookg>
             <NbOfTxs>{{ count($transactions) }}</NbOfTxs>
             <CtrlSum>{{ number_format($transactionSum, 2, '.', '') }}</CtrlSum>
             <PmtTpInf>
