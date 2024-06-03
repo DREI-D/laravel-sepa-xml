@@ -27,7 +27,7 @@
             </Dbtr>
             <DbtrAcct>
                 <Id>
-                    <IBAN>{{ config('sepa.iban') }}</IBAN>
+                    <IBAN>{{ str_replace(" ", "", config('sepa.iban')) }}</IBAN>
                 </Id>
             </DbtrAcct>
             <DbtrAgt>
