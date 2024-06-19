@@ -35,7 +35,10 @@ return [
     'from'   => 'FROM EXAMPLE',
     'iban'   => 'IBAN EXAMPLE',
     'bic'    => 'BIC EXAMPLE',
-    'prefix' => 'PREFIX-EXAMPLE-'
+    'prefix' => 'PREFIX-EXAMPLE-',
+
+    // group transactions as a single transfer
+    'batch_booking' => false
 ];
 ```
 
@@ -43,6 +46,7 @@ return [
 - Replace `IBAN EXAMPLE` with the IBAN of the bank account you want to send money from. Do not include spaces.
 - Replace `BIC EXAMPLE` with the BIC of the bank account you want to send money from. Do not include spaces.
 - Replace `PREFIX` with a unique identifier for your project. This prefix is used to generate unique End-to-End-IDs for your transactions.
+- If you want to group your transactions as a single transfer, you can set `batch_booking` to true. If you are not familiar with batch booking, feel free to check out [this post](https://www.sepaforcorporates.com/sepa-payments/why-sepa-batch-booking-is-important/).
 
 An example for our company would be:
 ```php
@@ -50,7 +54,10 @@ return [
     'from'   => 'DREID-D DIREKTWERBUNG GMBH CO KG',
     'iban'   => 'DE02120300000000202051',
     'bic'    => 'BYLADEM1001',
-    'prefix' => '3D-INTERN-'
+    'prefix' => '3D-INTERN-',
+
+    // group transactions as a single transfer
+    'batch_booking' => false
 ];
 ```
 
