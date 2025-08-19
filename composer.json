@@ -2,7 +2,7 @@
     "name": "drei-d/laravel-sepa-xml",
     "description": "Creates SEPA XML files",
     "type": "library",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "autoload": {
         "psr-4": {
             "DREID\\LaravelSepaXml\\": "src/"
@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^10|^11",
+        "laravel/framework": "^10|^11|^12",
         "ext-dom": "*",
         "ext-iconv": "*"
     },

@@ -13,14 +13,14 @@ class TransactionFactory
         string $accountOwner,
         string $subject,
         string $iban,
-        string $bic,
+        ?string $bic,
         float $amount
     ): TransactionDto {
         return new TransactionDto(
             $this->sanitizer->sanitize($accountOwner),
             $this->sanitizer->sanitize($subject),
             $this->sanitizer->sanitizeBankDetails($iban),
-            $this->sanitizer->sanitizeBankDetails($bic),
+            $bic ? $this->sanitizer->sanitizeBankDetails($bic) : 'NOTPROVIDED',
             $amount
         );
     }
