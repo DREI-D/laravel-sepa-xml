@@ -1,6 +1,8 @@
 <?php
 
-namespace DREID\LaravelSepaXml\Dtos;
+declare(strict_types=1);
+
+namespace DREID\LaravelSepaXml\DataTransferObjects;
 
 readonly class TransactionDto
 {

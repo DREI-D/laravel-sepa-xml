@@ -2,11 +2,17 @@
 
 This project was made to create SEPA xml files in Laravel.
 
-## Requirements
+## Dependencies
+
+These dependencies are required:
 
 - Laravel 10 or higher
-- PHP 8.2 or higher
-- ext-dom & ext-iconv enabled
+- PHP 8.4 or higher
+
+... and for some features, these are needed:
+
+- ext-dom
+- ext-iconv
 
 ## Installation
 
@@ -63,49 +69,84 @@ return [
 
 ## Usage
 
-This project uses dependency injection. To get access to its services, you should inject them using the app() function, or, if possible, as function parameter.
+### Saving to a file
 
-Example:
+You can create a new SEPA file using the provided `Sepa` facade, like this:
 
 ```php
-use DREID\LaravelSepaXml\Factories\TransactionFactory;
-use DREID\LaravelSepaXml\Services\SepaFileCreationService;
+use DREID\LaravelSepaXml\Sepa;
 
-$factory = app(TransactionFactory::class);
-$service = app(SepaFileCreationService::class);
-
-$transaction = $factory->transform(
-    'Max Mustermann', // account owner
-    'Test-Subject for Transaction', // subject
-    'DE02120300000000202051', // IBAN
-    'BYLADEM1001', // BIC
-    49.95 // amount in EUR
-);
-
-$service->save(
-    'local', // storage disk
-    'sepa.xml', // file name
-    '1', // transaction number, should be unique per export
-    [
-        $transaction
-    ] // array of transactions you want to export
-);
+$creator = Sepa::create('T1-2026-')
+    ->addTransaction(
+        subject: 'Test-Subject for Transaction',
+        amount: 49.95, // amount in EUR
+        accountOwner: 'Max Mustermann',
+        iban: 'DE02120300000000202051', // IBAN
+        bic: 'BYLADEM1001', // BIC
+    )
+    ->save('text.xml');
 ```
 
-When using the factory, your values are automatically sanitized. You can see the changes made by dumping the DTO.
+### Getting the XML content as a string
+
+Instead of saving to a file, you can also get the generated XML content like this:
 
 ```php
-dump($transaction);
+use DREID\LaravelSepaXml\Sepa;
+
+$creator = Sepa::create('T1-2026-')
+    ->addTransaction(
+        // ..
+    )
+    ->getContent();
 ```
 
-The result should look like this:
+### Sanitizing the inputs
+
+If you are not sure, whether your data contains (mostly forbidden) special characters or not, you can turn on the built-in sanitizer like this:
 
 ```php
-[
-    'accountOwner' => 'MAX MUSTERMANN',
-    'subject'      => 'TEST-SUBJECT FOR TRANSACTION',
-    'iban'         => 'DE02120300000000202051',
-    'bic'          => 'BYLADEM1001',
-    'amount'       => 49.95
-]
+use DREID\LaravelSepaXml\Sepa;
+
+$creator = Sepa::create('T1-2026-')
+    ->sanitized()
+    ->addTransaction(
+        // ..
+    )
+    ->getContent();
+```
+
+### Minifying the output
+
+By default, the output gets formatted. You can also minify the XML instead:
+
+```php
+use DREID\LaravelSepaXml\Sepa;
+
+$creator = Sepa::create('T1-2026-')
+    ->minified()
+    ->addTransaction(
+        // ..
+    )
+    ->getContent();
+```
+
+### Using a different configuration per created file
+
+If you need to create transactions from multiple accounts, you can pass a configuration class to the `Sepa` facade as well:
+
+```php
+use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\DataTransferObjects\ConfigurationDto;
+
+$creator = Sepa::create(
+    transactionNumber: 'T1-2026-',
+    configurationDto: new ConfigurationDto(
+        from: 'MAX MUSTERMANN',
+        iban: 'DE02120300000000202051',
+        bic: 'BYLADEM1001',
+        prefix: 'TEST-',
+        batchBooking: true,
+    )
+);
 ```

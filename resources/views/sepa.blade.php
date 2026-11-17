@@ -1,5 +1,10 @@
+@php
+    /** @var \DREID\LaravelSepaXml\DataTransferObjects\TransactionDto[] $transactions */
+    /** @var \DREID\LaravelSepaXml\DataTransferObjects\ConfigurationDto $configuration */
+@endphp
+
 <?xml version="1.0" encoding="UTF-8"?>
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd">
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.09" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.09 pain.001.001.09.xsd">
     <CstmrCdtTrfInitn>
         <GrpHdr>
             <MsgId>{{ $messageId }}</MsgId>
@@ -7,13 +12,13 @@
             <NbOfTxs>{{ count($transactions) }}</NbOfTxs>
             <CtrlSum>{{ number_format($transactionSum, 2, '.', '') }}</CtrlSum>
             <InitgPty>
-                <Nm>{{ config('sepa.from') }}</Nm>
+                <Nm>{{ $configuration->from }}</Nm>
             </InitgPty>
         </GrpHdr>
         <PmtInf>
             <PmtInfId>{{ $messageId }}</PmtInfId>
             <PmtMtd>TRF</PmtMtd>
-            <BtchBookg>{{ config('sepa.batch_booking') ? 'true' : 'false' }}</BtchBookg>
+            <BtchBookg>{{ $configuration->batchBooking ? 'true' : 'false' }}</BtchBookg>
             <NbOfTxs>{{ count($transactions) }}</NbOfTxs>
             <CtrlSum>{{ number_format($transactionSum, 2, '.', '') }}</CtrlSum>
             <PmtTpInf>
@@ -23,16 +28,16 @@
             </PmtTpInf>
             <ReqdExctnDt>{{ today()->format('Y-m-d') }}</ReqdExctnDt>
             <Dbtr>
-                <Nm>{{ config('sepa.from') }}</Nm>
+                <Nm>{{ $configuration->from }}</Nm>
             </Dbtr>
             <DbtrAcct>
                 <Id>
-                    <IBAN>{{ str_replace(' ', '', config('sepa.iban')) }}</IBAN>
+                    <IBAN>{{ str_replace(' ', '', $configuration->iban) }}</IBAN>
                 </Id>
             </DbtrAcct>
             <DbtrAgt>
                 <FinInstnId>
-                    <BIC>{{ config('sepa.bic') }}</BIC>
+                    <BICFI>{{ $configuration->bic }}</BICFI>
                 </FinInstnId>
             </DbtrAgt>
             <ChrgBr>SLEV</ChrgBr>
@@ -46,7 +51,7 @@
                     </Amt>
                     <CdtrAgt>
                         <FinInstnId>
-                            <BIC>{{ $transaction->bic }}</BIC>
+                            <BICFI>{{ $transaction->bic }}</BICFI>
                         </FinInstnId>
                     </CdtrAgt>
                     <Cdtr>
