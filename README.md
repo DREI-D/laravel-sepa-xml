@@ -74,7 +74,7 @@ return [
 You can create a new SEPA file using the provided `Sepa` facade, like this:
 
 ```php
-use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\Facades\Sepa;
 
 $creator = Sepa::create('T1-2026-')
     ->addTransaction(
@@ -92,7 +92,7 @@ $creator = Sepa::create('T1-2026-')
 Instead of saving to a file, you can also get the generated XML content like this:
 
 ```php
-use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\Facades\Sepa;
 
 $creator = Sepa::create('T1-2026-')
     ->addTransaction(
@@ -106,7 +106,7 @@ $creator = Sepa::create('T1-2026-')
 If you are not sure, whether your data contains (mostly forbidden) special characters or not, you can turn on the built-in sanitizer like this:
 
 ```php
-use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\Facades\Sepa;
 
 $creator = Sepa::create('T1-2026-')
     ->sanitized()
@@ -121,7 +121,7 @@ $creator = Sepa::create('T1-2026-')
 By default, the output gets formatted. You can also minify the XML instead:
 
 ```php
-use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\Facades\Sepa;
 
 $creator = Sepa::create('T1-2026-')
     ->minified()
@@ -136,7 +136,7 @@ $creator = Sepa::create('T1-2026-')
 If you need to create transactions from multiple accounts, you can pass a configuration class to the `Sepa` facade as well:
 
 ```php
-use DREID\LaravelSepaXml\Sepa;
+use DREID\LaravelSepaXml\Facades\Sepa;
 use DREID\LaravelSepaXml\DataTransferObjects\ConfigurationDto;
 
 $creator = Sepa::create(

@@ -7,6 +7,7 @@ namespace DREID\LaravelSepaXml;
 use DREID\LaravelSepaXml\DataTransferObjects\ConfigurationDto;
 use DREID\LaravelSepaXml\DataTransferObjects\TransactionDto;
 use DREID\LaravelSepaXml\Exceptions\FormatException;
+use DREID\LaravelSepaXml\Exceptions\LimitExceededException;
 use DREID\LaravelSepaXml\Exceptions\MissingExtensionException;
 use DREID\LaravelSepaXml\Exceptions\RenderException;
 use DREID\LaravelSepaXml\Interfaces\Formatter;
@@ -14,7 +15,7 @@ use DREID\LaravelSepaXml\Interfaces\Sanitizer;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
-class SepaFileBuilder
+class SepaBuilder
 {
     /** @var TransactionDto[] */
     private array $transactions = [];
@@ -44,6 +45,7 @@ class SepaFileBuilder
 
     /**
      * @throws MissingExtensionException
+     * @throws LimitExceededException
      */
     public function addTransaction(
         string $subject,
@@ -75,8 +77,14 @@ class SepaFileBuilder
         return $this;
     }
 
+    /**
+     * @throws LimitExceededException
+     */
     public function addTransactionDto(TransactionDto $dto): self
     {
+        $this->checkValueLimit($dto->amount);
+        $this->checkNumberLimit();
+
         $this->transactions[] = $dto;
 
         return $this;
@@ -140,6 +148,38 @@ class SepaFileBuilder
             ])->render();
         } catch (Throwable $exception) {
             throw new RenderException($exception);
+        }
+    }
+
+    /**
+     * @throws LimitExceededException
+     */
+    protected function checkValueLimit(float $addedAmount): void
+    {
+        if (!$this->configuration->maxValueOfTransactions) {
+            return;
+        }
+
+        $currentValue = array_reduce($this->transactions, function (float $carry, TransactionDto $dto) {
+            return $carry + $dto->amount;
+        }, 0);
+
+        if ($currentValue + $addedAmount > $this->configuration->maxValueOfTransactions) {
+            throw LimitExceededException::valueOfTransactions();
+        }
+    }
+
+    /**
+     * @throws LimitExceededException
+     */
+    protected function checkNumberLimit(): void
+    {
+        if (!$this->configuration->maxNumberOfTransactions) {
+            return;
+        }
+
+        if (count($this->transactions) >= $this->configuration->maxNumberOfTransactions) {
+            throw LimitExceededException::numberOfTransactions();
         }
     }
 }

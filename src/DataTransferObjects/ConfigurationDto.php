@@ -12,5 +12,7 @@ readonly class ConfigurationDto
         public string $bic,
         public string $prefix,
         public bool $batchBooking = false,
+        public ?int $maxNumberOfTransactions = null,
+        public ?float $maxValueOfTransactions = null,
     ) {}
 }
