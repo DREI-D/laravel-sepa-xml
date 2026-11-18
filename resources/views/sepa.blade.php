@@ -26,7 +26,9 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt>{{ today()->format('Y-m-d') }}</ReqdExctnDt>
+            <ReqdExctnDt>
+                <Dt>{{ today()->format('Y-m-d') }}</Dt>
+            </ReqdExctnDt>
             <Dbtr>
                 <Nm>{{ $configuration->from }}</Nm>
             </Dbtr>
