@@ -15,14 +15,24 @@ class Sepa
      */
     public function create(string $transactionNumber, ?ConfigurationDto $configuration = null): SepaBuilder
     {
+        $maxNumberOfTransactions = Config::get('sepa.max_number_of_transactions');
+        $maxValueOfTransactions = Config::get('sepa.max_value_of_transactions');
+
+        if (
+            (!is_float($maxValueOfTransactions) && $maxValueOfTransactions !== null)
+            || (!is_int($maxNumberOfTransactions) && $maxNumberOfTransactions !== null)
+        ) {
+            throw new ConfigurationException();
+        }
+
         $configuration ??= new ConfigurationDto(
             from: Config::string('sepa.from'),
             iban: Config::string('sepa.iban'),
             bic: Config::string('sepa.bic'),
             prefix: Config::string('sepa.prefix'),
             batchBooking: Config::boolean('sepa.batch_booking', false),
-            maxNumberOfTransactions: Config::integer('sepa.max_number_of_transactions') ?: null,
-            maxValueOfTransactions: Config::integer('sepa.max_value_of_transactions') ?: null,
+            maxNumberOfTransactions: $maxNumberOfTransactions,
+            maxValueOfTransactions: $maxValueOfTransactions,
         );
 
         if (

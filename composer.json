@@ -29,10 +29,13 @@
     "require-dev": {
         "laravel/pint": "^1.32",
         "larastan/larastan": "^3.15",
-        "orchestra/testbench": "^11.3"
+        "orchestra/testbench": "^11.3",
+        "pestphp/pest": "^5.3",
+        "pestphp/pest-plugin-laravel": "^5.0"
     },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
         "format": "vendor/bin/pint"
     },
     "extra": {
