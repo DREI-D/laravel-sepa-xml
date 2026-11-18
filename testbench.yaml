@@ -1,0 +1,2 @@
+providers:
+  - DREID\LaravelSepaXml\Providers\ServiceProvider

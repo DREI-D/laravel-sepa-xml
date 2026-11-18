@@ -7,6 +7,7 @@ namespace DREID\LaravelSepaXml\Services;
 use DREID\LaravelSepaXml\Exceptions\MissingExtensionException;
 use DREID\LaravelSepaXml\Interfaces\Sanitizer;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 readonly class SepaSanitizer implements Sanitizer
 {
@@ -32,22 +33,40 @@ readonly class SepaSanitizer implements Sanitizer
             $value = Str::replace($replace, $with, $value);
         }
 
+        /** @noinspection PhpComposerExtensionStubsInspection */
         $value = iconv('utf-8', 'ascii//TRANSLIT', $value);
+
+        if ($value === false) {
+            throw new RuntimeException('Failed to convert value to ASCII.');
+        }
+
         $value = Str::upper($value);
 
-        return preg_replace(
+        $value = preg_replace(
             '/[^a-zA-Z0-9\-. ]/',
             '',
             $value
         );
+
+        if (!is_string($value)) {
+            throw new RuntimeException('preg_replace did not return a string as expected.');
+        }
+
+        return $value;
     }
 
     public function sanitizeBankDetails(string $value): string
     {
-        return preg_replace(
+        $value = preg_replace(
             '/[^A-Z0-9]/',
             '',
             Str::upper($value)
         );
+
+        if (!is_string($value)) {
+            throw new RuntimeException('preg_replace did not return a string as expected.');
+        }
+
+        return $value;
     }
 }
